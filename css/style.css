@@ -1,0 +1,74 @@
+/**
+关于 absolute 定位:
+    absolute 是最棘手的position值。 absolute 与 fixed 的表现类似，
+但是它不是相对于视窗而是相对于最近的“positioned”祖先元素。
+如果绝对定位（position属性的值为absolute）的元素没有“positioned”
+祖先元素，那么它是相对于文档的 body 元素，并且它会随着页面滚动而
+移动。记住一个“positioned”元素是指 position 值不是 static 的元素。
+*/
+
+@import url(https://fonts.googleapis.com/css?family=Acme);
+
+html {
+    background-color: #eee;
+}
+
+.init-msg {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 360px;
+    height: 360px;
+    margin: -180px;
+    /*使用负margin的方法完成绝对居中*/
+}
+
+.center-circle {
+    /* align to the center */
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.message {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 100%;
+    -webkit-transition: 0.1s ease 0.3s;
+    transition: 0.1s ease 0.3s;
+    text-align: center;
+    font: 16px 'Acme', Helvetica, Arial, sans-serif;
+}
+
+.message h1 {
+    font: 48px 'Acme', Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    margin: 0 0 15px;
+    color: #FC354C;
+}
+
+.message p {
+    color: #444;
+    font: 13px tahoma, Helvetica, "Segoe UI", Verdana, Arial;
+    letter-spacing: 1px;
+    margin: 0 0 0;
+}
+
+/*
+关于 fixed 定位:
+    一个固定定位（position属性的值为fixed）元素会相对于视窗来定位，
+这意味着即便页面滚动，它还是会停留在相同的位置。和 relative 一样，
+ top 、 right 、 bottom 和 left 属性都可用。
+ */
+.footer {
+    position: fixed;
+    bottom: 10%;
+    width: 100%;
+    text-align: center;
+    font: 13px tahoma, "segoe UI", Helvetica, Arial;
+}
