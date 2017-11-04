@@ -11,16 +11,26 @@
 
 html {
     background-color: #eee;
+    width: 100%;
+    height: 100%;
 }
 
 .init-msg {
-    position: absolute;
-    top: 40%;
+    position: fixed;
+    top: 50%;
     left: 50%;
     width: 360px;
     height: 360px;
-    margin: -180px;
-    /*使用负margin的方法完成绝对居中*/
+
+    /*
+        两种方案完成“绝对居中”
+        1. transform: translateX(-50%) translateY(-50%);
+        2. margin: -180px; 使用负margin的方法完成绝对居中
+    */
+    transform: translateX(-50%) translateY(-50%);
+     
+    /*使用trainsition的特性让所有变量的变化在3s内过渡并完成 */
+    transition-duration: 3s;
 }
 
 .center-circle {
@@ -31,15 +41,18 @@ html {
     border-radius: 50%;
     background: #fff;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    /*
+        使用带贝塞尔的动效函数
+    */
+    transition: transform 0.5s cubic-bezier(0.785, -0.370, 0.290, 1.335)  0.4s;
+    /*transition-duration: 3s;*/
 }
 
 .message {
     position: absolute;
     top: 50%;
-    -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
     width: 100%;
-    -webkit-transition: 0.1s ease 0.3s;
     transition: 0.1s ease 0.3s;
     text-align: center;
     font: 16px 'Acme', Helvetica, Arial, sans-serif;
@@ -59,16 +72,57 @@ html {
     margin: 0 0 0;
 }
 
+
+
 /*
 关于 fixed 定位:
     一个固定定位（position属性的值为fixed）元素会相对于视窗来定位，
 这意味着即便页面滚动，它还是会停留在相同的位置。和 relative 一样，
  top 、 right 、 bottom 和 left 属性都可用。
  */
+
 .footer {
     position: fixed;
     bottom: 10%;
     width: 100%;
     text-align: center;
     font: 13px tahoma, "segoe UI", Helvetica, Arial;
+}
+
+.ingame .init-msg {
+    transform: scale(0);
+}
+.ingame .center-circle {
+    transform: scale(0);
+}
+
+
+
+
+/*
+    利用@media screen实现网页布局的自适应
+    当检测到设备的最大宽度不足400px时，
+    替换/覆盖部分元素的属性
+*/
+
+@media screen and (max-width: 400px) {
+    .center-circle {
+        width: 250px;
+        height: 250px;
+    }
+
+    .init-msg {
+        width: 250px;
+        height: 250px;
+        margin: -125px;
+    }
+
+    .message h1 {
+        font: 38px 'Acme', Helvetica, Arial, sans-serif;
+        margin: 0 0 10px;
+        color: #FC354C;
+    }
+    .message p {
+        font: 13px tahoma, Helvetica, "Segoe UI", Verdana, Arial;
+    }
 }
