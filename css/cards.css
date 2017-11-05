@@ -1,0 +1,127 @@
+/*
+    主要用于卡片相关的CSS编写
+*/
+
+.cards-container {
+    width: auto;
+    height: auto;
+    margin: 10px;
+    opacity: 0;
+    transition: all 0s ease 1s;
+}
+
+/*
+   游戏开始后再显示容器图层的内容
+ */
+.ingame .cards-container {
+    opacity: 1;
+}
+
+.card {
+    position: relative;
+    display: inline-block;
+    width: 150px;
+    height: 220px;
+    margin: 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+/*
+ * 首先将卡牌的位置上移20像素
+ * 待游戏开始后，切换CSS属性，
+ * 完成"渐渐引入"的效果
+ */
+* .card {
+  opacity: 0; 
+  transform: translateY(-20px);
+}
+
+.ingame * .card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back,.front {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    transition: all 3s ease;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    /*transition: all 0.3s ease;*/
+}
+
+.back {
+    background: #FFF url(../img/help.png) no-repeat center center;
+     background-size: 64px 64px;
+    z-index: 2;
+}
+
+
+/*
+    先将图片翻转180度，待用户触发翻转动作时,
+    flipper 选择器会将对应的元素翻转回0°的样子。
+ */
+
+.front {
+    background: transparent url(../img/chicken.png) no-repeat center center;
+    transform: rotateY(-180deg);
+}
+
+.flipper .back {
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+}
+
+.flipper .front {
+    transform: rotateY(0deg);
+}
+
+/*
+    每个卡片不同的部分
+ */
+.card:nth-child(1) {
+    transition-delay: 1.2s;
+}
+.card:nth-child(2) {
+    transition-delay: 1.4s;
+}
+.card:nth-child(3) {
+    transition-delay: 1.6s;
+}
+.card:nth-child(4) {
+    transition-delay: 1.8s;
+}
+.card:nth-child(5) {
+    transition-delay: 2.0s;
+}
+.card:nth-child(6) {
+    transition-delay: 2.2s;
+}
+.card:nth-child(7) {
+    transition-delay: 2.4s;
+}
+.card:nth-child(8) {
+    transition-delay: 2.6s;
+}
+.card:nth-child(9) {
+    transition-delay: 2.8s;
+}
+.card:nth-child(10) {
+    transition-delay: 3.0s;
+}
+.card:nth-child(11) {
+    transition-delay: 3.2s;
+}
+.card:nth-child(12) {
+    transition-delay: 3.4s;
+}
+.card:nth-child(13) {
+    transition-delay: 3.6s;
+}
+.card:nth-child(14) {
+    transition-delay: 3.8s;
+}

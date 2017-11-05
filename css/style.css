@@ -31,6 +31,7 @@ html {
      
     /*使用trainsition的特性让所有变量的变化在3s内过渡并完成 */
     transition-duration: 3s;
+    z-index: 5;
 }
 
 .center-circle {
@@ -87,7 +88,14 @@ html {
     width: 100%;
     text-align: center;
     font: 13px tahoma, "segoe UI", Helvetica, Arial;
+    transition: transform 0.5s cubic-bezier(0.785, -0.370, 0.290, 1.335)  0.4s;
 }
+
+.ingame .footer {
+    /* 游戏开始后移除footer*/
+    transform: translateY(+200px);
+}
+
 
 .ingame .init-msg {
     transform: scale(0);
