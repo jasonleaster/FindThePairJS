@@ -73,34 +73,41 @@ App = {
 
             $(item).on('click', function() {
                 let curCard = $(item).find('.front').attr('name');
-                let preCard = appCtx.preCard;
-
+            
                 debugger;
                 if (appCtx.flipCounter[curCard] < 2) {
-                    $(item).addClass('flipper');
                     
-                    appCtx.flipCounter[curCard] += 1;
+                    $(item).addClass('flipper');
 
-                    if (preCard === null) { 
-                        appCtx.preCard = curCard;
-                    } else if (preCard === curCard) { 
-                        appCtx.preCard = null;
-                    } else {
-                        appCtx.flipCounter[curCard] = 0;
-                        appCtx.flipCounter[preCard] = 0;
+                    var handler = function() {
 
-                        $('.front[name=' + curCard +']')
-                            .parent().each(function (i, item) {
+                        appCtx.flipCounter[curCard] += 1;
 
-                            $(item).removeClass('flipper');
-                        });
+                        if (appCtx.preCard === null) {
+                            appCtx.preCard = curCard;
+                        } else if (appCtx.preCard === curCard) {
+                            appCtx.preCard = null;
+                        } else {
+                            appCtx.flipCounter[curCard] = 0;
+                            appCtx.flipCounter[appCtx.preCard] = 0;
 
-                        $('.front[name=' + preCard +']')
-                            .parent().each(function (i, item) {
+                            $('.front[name=' + curCard + ']')
+                                .parent().each(function(i, item) {
 
-                            $(item).removeClass('flipper');
-                        });
-                    } 
+                                    $(item).removeClass('flipper');
+                                });
+
+                            $('.front[name=' + appCtx.preCard + ']')
+                                .parent().each(function(i, item) {
+
+                                    $(item).removeClass('flipper');
+                                });
+                            appCtx.preCard = null;
+                        }
+                    }
+
+                    setTimeout(handler, 2000);
+                    
                 }
             });
         });

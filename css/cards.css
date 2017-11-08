@@ -73,10 +73,12 @@
 .flipper .back {
     transform: rotateY(180deg);
     backface-visibility: hidden;
+    transition: all 3s ease;
 }
 
 .flipper .front {
     transform: rotateY(0deg);
+    transition: all 3s ease;
 }
 
 /*
