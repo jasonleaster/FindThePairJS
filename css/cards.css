@@ -67,7 +67,6 @@
  */
 
 .front {
-    background: transparent url(../img/chicken.png) no-repeat center center;
     transform: rotateY(-180deg);
 }
 
@@ -124,4 +123,10 @@
 }
 .card:nth-child(14) {
     transition-delay: 3.8s;
+}
+
+.card .front {
+    background-color:  transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
 }

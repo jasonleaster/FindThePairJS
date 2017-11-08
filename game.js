@@ -32,6 +32,9 @@ function shuffle(array) {
 
 App = {
     init: function () {
+        this.flipCounter = {};
+        this.preCard = null;
+
         this.loadImages();
         this.bindEvent();
 
@@ -46,18 +49,59 @@ App = {
             return 'url(' + IMG_PATH + IMG_NAMES[index] + IMG_SUFFIX + ')';
         }
 
+        function getImgName(index) {
+            return IMG_NAMES[index];
+        }
+
         let frontFaces = $('.card .front');
         frontFaces = shuffle(frontFaces);
 
+        let appCtx = this;
         frontFaces.each(function (index, item) {
-            $(item).css('background-image', getImgPath(Math.floor(index / 2)));
+            let imgIdx = Math.floor(index / 2);
+            $(item).css('background-image', getImgPath(imgIdx));
+            $(item).attr('name', getImgName(imgIdx));
+
+            appCtx.flipCounter[getImgName(imgIdx)] = 0;
         });
     },
     bindEvent: function () {
+        let appCtx = this;
+
         let cards = $('.card');
         cards.each(function (index, item) {
+
             $(item).on('click', function() {
-                $(item).addClass('flipper');
+                let curCard = $(item).find('.front').attr('name');
+                let preCard = appCtx.preCard;
+
+                debugger;
+                if (appCtx.flipCounter[curCard] < 2) {
+                    $(item).addClass('flipper');
+                    
+                    appCtx.flipCounter[curCard] += 1;
+
+                    if (preCard === null) { 
+                        appCtx.preCard = curCard;
+                    } else if (preCard === curCard) { 
+                        appCtx.preCard = null;
+                    } else {
+                        appCtx.flipCounter[curCard] = 0;
+                        appCtx.flipCounter[preCard] = 0;
+
+                        $('.front[name=' + curCard +']')
+                            .parent().each(function (i, item) {
+
+                            $(item).removeClass('flipper');
+                        });
+
+                        $('.front[name=' + preCard +']')
+                            .parent().each(function (i, item) {
+
+                            $(item).removeClass('flipper');
+                        });
+                    } 
+                }
             });
         });
 
