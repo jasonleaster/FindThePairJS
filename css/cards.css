@@ -5,7 +5,7 @@
 .cards-container {
     width: auto;
     height: auto;
-    margin: 10px;
+    margin: 25px 50px;
     opacity: 0;
     transition: all 0s ease 1s;
 }
@@ -49,14 +49,16 @@
     width: 100%;
     height: 100%;
     border-radius: 10px;
-    transition: all 3s ease;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    transition: all 1s ease;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    backface-visibility: hidden;
     /*transition: all 0.3s ease;*/
 }
 
 .back {
     background: #FFF url(../img/help.png) no-repeat center center;
-     background-size: 64px 64px;
+    background-size: 64px 64px;
+    transform: rotateY(0deg);
     z-index: 2;
 }
 
@@ -72,13 +74,16 @@
 
 .flipper .back {
     transform: rotateY(180deg);
-    backface-visibility: hidden;
-    transition: all 3s ease;
+    transition: all 1s ease;
 }
 
 .flipper .front {
     transform: rotateY(0deg);
-    transition: all 3s ease;
+    transition: all 1s ease;
+}
+
+.card :hover {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
 }
 
 /*
@@ -131,4 +136,23 @@
     background-color:  transparent;
     background-repeat: no-repeat;
     background-position: center center;
+}
+
+@media screen and (max-width: 400px) {
+
+    .cards-container {
+        margin: 2% 10%;
+    }
+    .card {
+        width: 60px;
+        height: 88px;
+        margin: 5px;
+    }
+    .back {
+        background-size: 32px 32px;
+    }
+
+    .front {
+        background-size: 60px 88px;
+    }
 }

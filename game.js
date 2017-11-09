@@ -1,6 +1,7 @@
 /**
  * Author: Jason Leaster
  * Date  : 2017/11/07
+ * File  : game.js
  */
 
 
@@ -66,48 +67,49 @@ App = {
         });
     },
     bindEvent: function () {
-        let appCtx = this;
+        const appCtx = this;
+
+        const handler = function(curCard) {
+
+            appCtx.flipCounter[curCard] += 1;
+
+            if (appCtx.preCard === null) {
+                appCtx.preCard = curCard;
+            } else if (appCtx.preCard === curCard) {
+                appCtx.preCard = null;
+            } else {
+                appCtx.flipCounter[curCard] = 0;
+                appCtx.flipCounter[appCtx.preCard] = 0;
+
+                $('.front[name=' + curCard + ']')
+                    .parent().each(function(i, item) {
+
+                        $(item).removeClass('flipper');
+                    });
+
+                $('.front[name=' + appCtx.preCard + ']')
+                    .parent().each(function(i, item) {
+
+                        $(item).removeClass('flipper');
+                    });
+                appCtx.preCard = null;
+            }
+        }
+
 
         let cards = $('.card');
         cards.each(function (index, item) {
 
             $(item).on('click', function() {
                 let curCard = $(item).find('.front').attr('name');
-            
-                debugger;
+
                 if (appCtx.flipCounter[curCard] < 2) {
                     
                     $(item).addClass('flipper');
 
-                    var handler = function() {
-
-                        appCtx.flipCounter[curCard] += 1;
-
-                        if (appCtx.preCard === null) {
-                            appCtx.preCard = curCard;
-                        } else if (appCtx.preCard === curCard) {
-                            appCtx.preCard = null;
-                        } else {
-                            appCtx.flipCounter[curCard] = 0;
-                            appCtx.flipCounter[appCtx.preCard] = 0;
-
-                            $('.front[name=' + curCard + ']')
-                                .parent().each(function(i, item) {
-
-                                    $(item).removeClass('flipper');
-                                });
-
-                            $('.front[name=' + appCtx.preCard + ']')
-                                .parent().each(function(i, item) {
-
-                                    $(item).removeClass('flipper');
-                                });
-                            appCtx.preCard = null;
-                        }
-                    }
-
-                    setTimeout(handler, 2000);
-                    
+                    setTimeout(function () {
+                        handler(curCard)
+                    }, 1200);
                 }
             });
         });
