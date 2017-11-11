@@ -153,5 +153,12 @@ App = {
     },
 };
 
+var vueContext = new Vue({
+    el: '#gameContainer',
+    data: {
+        totalCards: 14
+    }
+});
+
 // Initlization the SPA
 App.init();

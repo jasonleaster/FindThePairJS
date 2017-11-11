@@ -14,60 +14,9 @@
 </head>
 
 <body>
-    <div class="cards-container">
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-        <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-         <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-         <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-         <div class="card">
-            <div class="back"></div>
-            <div class="front"></div>
-        </div>
-         <div class="card">
+   
+    <div id="gameContainer" class="cards-container" >
+        <div class="card" v-for="i in totalCards">
             <div class="back"></div>
             <div class="front"></div>
         </div>
@@ -84,7 +33,9 @@
     </div>
 
     <div class="win-info">
-        <h1>Good Job! You win the game in <span class="costTime">20</span> seconds!<h1>
+        <h1>Good Job! You win the game in 
+            <span class="costTime">20</span> seconds!
+        <h1>
     </div>
 
     <div class="footer">
@@ -92,6 +43,7 @@
     </div>
 
     <script type="text/javascript" src="./libs/jquery.js"></script>
+    <script type="text/javascript" src="./libs/vue.js"></script>
     <script type="text/javascript" src="./game.js"></script>
 </body>
 
