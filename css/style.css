@@ -107,7 +107,24 @@ html {
 }
 
 
+.win-info {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(238, 238, 238, 0.95);
+    transition: all 0.7s ease 0.7s;
+    z-index: 40;
+    visibility: hidden;
+}
 
+.win-info h1 {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    text-align: center;
+}
 
 /*
     利用@media screen实现网页布局的自适应
