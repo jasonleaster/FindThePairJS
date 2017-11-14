@@ -25,6 +25,7 @@
     margin: 10px;
     border-radius: 10px;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 /*
@@ -70,6 +71,14 @@
 
 .front {
     transform: rotateY(-180deg);
+}
+
+/**
+ * 当卡片已经反转之后，不允许重新点击
+ */
+.flipper {
+ /*   pointer-events: none;
+    cursor: default;*/
 }
 
 .flipper .back {
