@@ -4,6 +4,10 @@
  * File  : game.js
  */
 
+/**
+ * [Util tool function for this application]
+ * @type {Object}
+ */
 Util = {
     nowInMilSec : function () {
         return new Date().getTime() / 1000;
@@ -32,11 +36,17 @@ Util = {
 
 }
 
-
+/**
+ * [App description]
+ * @type {Object}
+ */
 App = {
     init: function () {
-        this.flipCounter = {};
-        this.preCard = null;
+        this.flipCounter = {}; // {cardName: count}
+       
+        this.preCardId = -1;
+        this.preCardName = null;
+
         this.flippedOverCards = 0
         this.totalCards  = 0;
 
@@ -68,35 +78,44 @@ App = {
             let imgIdx = Math.floor(index / 2);
             $(item).css('background-image', getImgPath(imgIdx));
             $(item).attr('name', getImgName(imgIdx));
+            $(item).attr('id', index);
 
             appCtx.flipCounter[getImgName(imgIdx)] = 0;
         });
 
         this.totalCards = frontFaces.length;
     },
+
+    /**
+     * 1. Bind the handler of click events on cards
+     * 2. Bind the handler of click events on the button for starting the game
+     */
     bindEvent: function () {
         const appCtx = this;
 
         /* 
-            try delay the reation for waiting 
+            try to delay the reation for waiting 
             the UI animation to be finished
         */
         const HANDLER_DELAY = 1200;
 
-        const handler = function(curCard) {
+        const clickFlags = {}; // {id : boolean}
+        const handler = function(cardId, cardName) {
 
-            appCtx.flipCounter[curCard] += 1;
+            appCtx.flipCounter[cardName] += 1;
 
-            if (appCtx.preCard === null) {
-                appCtx.preCard = curCard;
-            } else if (appCtx.preCard === curCard) {
-                appCtx.preCard = null;
+            if (appCtx.preCardName === null) {
+                appCtx.preCardId   = cardId;
+                appCtx.preCardName = cardName;
+            } else if (appCtx.preCardName === cardName) {
+                appCtx.preCardId   = -1;
+                appCtx.preCardName = null;
                 
                 appCtx.flippedOverCards += 2;
 
-                //check if game over appCtx.totalCards
-                if (appCtx.flippedOverCards >= 0) {
-                    console.log("Game OVer! You win the game!");
+                //check if game over 
+                if (appCtx.flippedOverCards >= appCtx.totalCards) {
+                    console.log("Game Over! You win the game!");
 
                     let costTime = Util.nowInMilSec() - appCtx.startTime;
                     $('.costTime').html(costTime.toFixed(2));
@@ -105,41 +124,58 @@ App = {
                 }
                 
             } else {
-                appCtx.flipCounter[curCard] = 0;
-                appCtx.flipCounter[appCtx.preCard] = 0;
 
                 /*
                     reset the cards which are flippered and 
                     not the same of front faces.
                  */
-                $('.front[name=' + curCard + ']')
+                function removeFlipper(cardName) {
+                    $('.front[name=' + cardName + ']')
                     .parent().each(function(i, item) {
 
                         $(item).removeClass('flipper');
                     });
+                }
 
-                $('.front[name=' + appCtx.preCard + ']')
-                    .parent().each(function(i, item) {
+                removeFlipper(cardName);
+                removeFlipper(appCtx.preCardName);
 
-                        $(item).removeClass('flipper');
-                    });
-                appCtx.preCard = null;
+                appCtx.flipCounter[cardName] = 0;
+                appCtx.flipCounter[appCtx.preCardName] = 0;
+
+                clickFlags[cardId] = false;
+                clickFlags[appCtx.preCardId] = false;
+
+                appCtx.preCardId   = -1;
+                appCtx.preCardName = null;
             }
+
         }
 
-
-        let cards = $('.card');
+      
+        const cards = $('.card');
         cards.each(function (index, item) {
 
             $(item).on('click', function() {
-                let curCard = $(item).find('.front').attr('name');
 
-                if (appCtx.flipCounter[curCard] < 2) {
+                let cardId   = $(item).find('.front').attr('id');
+                let cardName = $(item).find('.front').attr('name');
+
+                /*
+                    TODO
+                    BUG! FIX ME
                     
+                if (clickFlags[cardId]) {
+                    return;
+                } else {
+                    clickFlags[cardId] = true;
+                } */
+
+                if (appCtx.flipCounter[cardName] < 2) {
                     $(item).addClass('flipper');
 
                     setTimeout(function () {
-                        handler(curCard)
+                        handler(cardId, cardName)
                     }, HANDLER_DELAY);
                 }
             });
