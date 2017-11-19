@@ -17,14 +17,14 @@
         通过引入 v-for指令 避免在HTML中书写大量的重复代码
     -->
     <div id="gameContainer" class="cards-container" >
-        <div class="card" v-for="i in totalCards">
+        <div class="card" v-for="i in totalCards" v-on:click="flipperHandler">
             <div class="back"></div>
             <div class="front" id="id" name="name"></div>
         </div>
     </div>
 
-    <div class="init-msg">
-        <div class="center-circle">
+    <div id="init-msg" class="init-msg">
+        <div class="center-circle" v-on:click="startGame">
             <div class="message">
                 <p>Let's play</p>
                 <h1>Find the Pair!</h1>
