@@ -36,94 +36,15 @@ Util = {
 
 }
 
-/**
- * [App description]
- * @type {Object}
- */
-App = {
-    init: function() {
-
-        // console.log("Game Initlization finished! Just Enjoy it :D ");
-    },
-
-    /**
-     * 1. Bind the handler of click events on cards
-     * 2. Bind the handler of click events on the button for starting the game
-     */
-    bindEvent: function() {
-        const appCtx = this;
-
-        /* 
-            try to delay the reation for waiting 
-            the UI animation to be finished
-        */
-        const HANDLER_DELAY = 1200;
-
-        const clickFlags = {}; // {id : boolean}
-        const handler = function(cardId, cardName) {
-
-            appCtx.flipCounter[cardName] += 1;
-
-            if (appCtx.preCardName === null) {
-                appCtx.preCardId = cardId;
-                appCtx.preCardName = cardName;
-            } else if (appCtx.preCardName === cardName) {
-                appCtx.preCardId = -1;
-                appCtx.preCardName = null;
-
-                appCtx.flippedOverCards += 2;
-
-                //check if game over 
-                if (appCtx.flippedOverCards >= appCtx.totalCards) {
-                    console.log("Game Over! You win the game!");
-
-                    let costTime = Util.nowInMilSec() - appCtx.startTime;
-                    $('.costTime').html(costTime.toFixed(2));
-
-                    $('.win-info').css('visibility', 'visible');
-                }
-
-            } else {
-
-                /*
-                    reset the cards which are flippered and 
-                    not the same of front faces.
-                 */
-                function removeFlipper(cardName) {
-                    $('.front[name=' + cardName + ']')
-                        .parent().each(function(i, item) {
-
-                            $(item).removeClass('flipper');
-                        });
-                }
-
-                removeFlipper(cardName);
-                removeFlipper(appCtx.preCardName);
-
-                appCtx.flipCounter[cardName] = 0;
-                appCtx.flipCounter[appCtx.preCardName] = 0;
-
-                clickFlags[cardId] = false;
-                clickFlags[appCtx.preCardId] = false;
-
-                appCtx.preCardId = -1;
-                appCtx.preCardName = null;
-            }
-
-        }
-
-    },
-};
-
 const gameContainer = new Vue({
     el: '#gameContainer',
     data: {
-        totalCards: 14,
-        flipCounter: {}, // {cardName: count}
-        preCardId: -1,
-        preCardName: null,
+        totalCards      : 14,
+        flipCounter     : {}, // {cardName: count}
+        preCardId       : -1,
+        preCardName     : null,
         flippedOverCards: 0,
-        startTime: Util.nowInMilSec(),
+        startTime       : Util.nowInMilSec(),
     },
     methods: {
         loadImages: function() {
@@ -155,9 +76,67 @@ const gameContainer = new Vue({
             this.totalCards = frontFaces.length;
         },
 
-        flipperHandler: function() {
+        flipTheCard: function(cardId, cardName) {
 
-            const item = ""; // TODO 拿到点击事件对应回调函数的DOM元素
+            this.flipCounter[cardName] += 1;
+
+            if (this.preCardName === null) {
+                this.preCardId = cardId;
+                this.preCardName = cardName;
+            } else if (this.preCardName === cardName) {
+                this.preCardId = -1;
+                this.preCardName = null;
+
+                this.flippedOverCards += 2;
+
+                //check if game over 
+                if (this.flippedOverCards >= this.totalCards) {
+                    console.log("Game Over! You win the game!");
+
+                    let costTime = Util.nowInMilSec() - this.startTime;
+                    $('.costTime').html(costTime.toFixed(2));
+
+                    $('.win-info').css('visibility', 'visible');
+                }
+
+            } else {
+
+                /*
+                    reset the cards which are flippered and 
+                    not the same of front faces.
+                 */
+                function removeFlipper(cardName) {
+                    $('.front[name=' + cardName + ']')
+                        .parent().each(function(i, item) {
+
+                            $(item).removeClass('flipper');
+                        });
+                }
+
+                removeFlipper(cardName);
+                removeFlipper(this.preCardName);
+
+                this.flipCounter[cardName] = 0;
+                this.flipCounter[this.preCardName] = 0;
+
+                // clickFlags[cardId] = false;
+                // clickFlags[this.preCardId] = false;
+
+                this.preCardId = -1;
+                this.preCardName = null;
+            }
+
+        },
+
+        flipperHandler: function($event) {
+            
+            const appCtx = this;
+            const HANDLER_DELAY = 1200;
+
+            /**
+             * 获取当前点击事件的对象
+             */
+            const item = $event.currentTarget;
 
             let cardId   = $(item).find('.front').attr('id');
             let cardName = $(item).find('.front').attr('name');
@@ -166,7 +145,7 @@ const gameContainer = new Vue({
                 $(item).addClass('flipper');
 
                 setTimeout(function() {
-                    handler(cardId, cardName)
+                    appCtx.flipTheCard(cardId, cardName)
                 }, HANDLER_DELAY);
             }
         }
@@ -180,10 +159,8 @@ const centerCircleCtx = new Vue({
         startGame: function() {
             $('body').addClass('ingame');
             gameContainer.loadImages();
+
+            console.log("Game Initlization finished! Just Enjoy it :D ");
         }
     }
 });
-
-
-// Initlization the SPA
-App.init();
