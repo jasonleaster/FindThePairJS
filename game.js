@@ -129,22 +129,22 @@ const gameContainer = new Vue({
         },
 
         flipperHandler: function($event) {
-            
+
             const appCtx = this;
             const HANDLER_DELAY = 1200;
 
             /**
-             * 获取当前点击事件的对象
+             * Get current DOM object which have been clicked
              */
             const item = $event.currentTarget;
 
-            let cardId   = $(item).find('.front').attr('id');
+            let cardId = $(item).find('.front').attr('id');
             let cardName = $(item).find('.front').attr('name');
 
             if (appCtx.flipCounter[cardName] < 2) {
                 $(item).addClass('flipper');
 
-                setTimeout(function() {
+                var eventId = setTimeout(function() {
                     appCtx.flipTheCard(cardId, cardName)
                 }, HANDLER_DELAY);
             }
