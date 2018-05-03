@@ -77,6 +77,7 @@ const gameContainer = new Vue({
         },
 
         flipTheCard: function(cardId, cardName) {
+            'use strict';
 
             this.flipCounter[cardName] += 1;
 
