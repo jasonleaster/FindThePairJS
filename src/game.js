@@ -61,8 +61,8 @@ const Util = {
 
 }
 
-const gameContainer = new Vue({
-    el: '#gameContainer',
+const gameContext = new Vue({
+    el: '#gameContext',
     data: {
         totalCards      : 14,
         flipCounter     : {}, // {cardName: count}
@@ -70,6 +70,7 @@ const gameContainer = new Vue({
         preCardName     : null,
         flippedOverCards: 0,
         startTime       : Util.nowInMilSec(),
+        started         : false,
     },
     methods: {
         loadImages: function() {
@@ -173,17 +174,11 @@ const gameContainer = new Vue({
                     appCtx.flipTheCard(cardId, cardName)
                 }, HANDLER_DELAY);
             }
-        }
+        },
 
-    }
-});
-
-const centerCircleCtx = new Vue({
-    el: '#init-msg',
-    methods: {
         startGame: function() {
-            $('body').addClass('ingame');
-            gameContainer.loadImages();
+            this.started = true;
+            this.loadImages();
 
             console.log("Game Initlization finished! Just Enjoy it :D ");
         }
