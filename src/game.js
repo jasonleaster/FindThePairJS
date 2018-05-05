@@ -26,51 +26,37 @@
  * File  : game.js
  */
 
-const $ = require("jquery")
 import Vue from 'vue';
 
-/**
- * [Util tool function for this application]
- * @type {Object}
- */
-const Util = {
-    nowInMilSec: function() {
-        return new Date().getTime() / 1000;
-    },
+import Util from "./utils/utils.js"
+import FooterComponent from "./componenets/footer.vue"
+import WinInfoComponent from "./componenets/win-info.vue"
+import CenterCicle from "./componenets/center-circle.vue"
+import Card from "./componenets/card.vue"
 
-    shuffle: function shuffle(array) {
-        let currentIndex = array.length;
-        let randomIndex = 0;
-        let temporaryValue = 0;
-
-        // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
-
-            // Pick a remaining element...
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-
-            // And swap it with the current element.
-            temporaryValue = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temporaryValue;
-        }
-
-        return array;
-    }
-
-}
 
 const gameContext = new Vue({
     el: '#gameContext',
     data: {
-        totalCards      : 14,
         flipCounter     : {}, // {cardName: count}
         preCardId       : -1,
         preCardName     : null,
         flippedOverCards: 0,
         startTime       : Util.nowInMilSec(),
         started         : false,
+        totalCards      : 14,
+        cards           : [], // {id : "", name: "",  image: ""}
+        winInfo : {
+            notShow  : true,
+            costTime : 0
+        },
+    },
+    components: {
+    //  将只在父组件模板中可用
+        'footer-component': FooterComponent,
+        'win-info-component': WinInfoComponent,
+        'center-circle': CenterCicle,
+        'card': Card,
     },
     methods: {
         loadImages: function() {
@@ -86,24 +72,45 @@ const gameContext = new Vue({
                 return IMG_NAMES[index];
             }
 
-            let frontFaces = $('.card .front');
-            frontFaces = Util.shuffle(frontFaces);
+            for (let i = 0; i < this.totalCards; i++) {
+                let imgIdx = Math.floor(i / 2);
+                let card = {
+                    "id": i, 
+                    "name": getImgName(imgIdx), 
+                    "image": getImgPath(imgIdx),
+                    "flip": false
+                };
+                this.cards.push(card);
+                this.flipCounter[getImgName(imgIdx)] = 0;
+            }
 
-            let appCtx = this;
-            frontFaces.each(function(index, item) {
-                let imgIdx = Math.floor(index / 2);
-                $(item).css('background-image', getImgPath(imgIdx));
-                $(item).attr('name', getImgName(imgIdx));
-                $(item).attr('id', index);
+            Util.shuffle(this.cards);
 
-                appCtx.flipCounter[getImgName(imgIdx)] = 0;
-            });
+            this.started = true;
+        },
 
-            this.totalCards = frontFaces.length;
+        flipHandlerWrapper : function (cardId, cardName) {
+            const HANDLER_DELAY = 1200;
+            const appCtx = this;
+
+            if (this.flipCounter[cardName] < 2) {
+
+                this.cards.forEach(function (card) {
+                    if (card.id == cardId) {
+                        card.flip = true;
+                    }
+                });
+
+                setTimeout(function() {
+                    appCtx.flipTheCard(cardId, cardName)
+                }, HANDLER_DELAY);
+            }
         },
 
         flipTheCard: function(cardId, cardName) {
+            const appCtx = this;
 
+            debugger;
             this.flipCounter[cardName] += 1;
 
             if (this.preCardName === null) {
@@ -119,10 +126,8 @@ const gameContext = new Vue({
                 if (this.flippedOverCards >= this.totalCards) {
                     console.log("Game Over! You win the game!");
 
-                    let costTime = Util.nowInMilSec() - this.startTime;
-                    $('.costTime').html(costTime.toFixed(2));
-
-                    $('.win-info').css('visibility', 'visible');
+                    this.winInfo.notShow = false;
+                    this.winInfo.costTime = (Util.nowInMilSec() - this.startTime).toFixed(2);
                 }
 
             } else {
@@ -132,11 +137,11 @@ const gameContext = new Vue({
                     not the same of front faces.
                  */
                 function removeFlipper(cardName) {
-                    $('.front[name=' + cardName + ']')
-                        .parent().each(function(i, item) {
-
-                            $(item).removeClass('flipper');
-                        });
+                    appCtx.cards.forEach(function (card) {
+                        if (card.name == cardName) {
+                            card.flip = false;
+                        }
+                    });
                 }
 
                 removeFlipper(cardName);
@@ -145,42 +150,9 @@ const gameContext = new Vue({
                 this.flipCounter[cardName] = 0;
                 this.flipCounter[this.preCardName] = 0;
 
-                // clickFlags[cardId] = false;
-                // clickFlags[this.preCardId] = false;
-
                 this.preCardId = -1;
                 this.preCardName = null;
             }
-
         },
-
-        flipperHandler: function($event) {
-            
-            const appCtx = this;
-            const HANDLER_DELAY = 1200;
-
-            /**
-             * 获取当前点击事件的对象
-             */
-            const item = $event.currentTarget;
-
-            let cardId   = $(item).find('.front').attr('id');
-            let cardName = $(item).find('.front').attr('name');
-
-            if (appCtx.flipCounter[cardName] < 2) {
-                $(item).addClass('flipper');
-
-                setTimeout(function() {
-                    appCtx.flipTheCard(cardId, cardName)
-                }, HANDLER_DELAY);
-            }
-        },
-
-        startGame: function() {
-            this.started = true;
-            this.loadImages();
-
-            console.log("Game Initlization finished! Just Enjoy it :D ");
-        }
     }
 });

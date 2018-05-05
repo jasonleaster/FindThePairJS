@@ -12,35 +12,30 @@
 
 <body>
     <div id="gameContext" v-bind:class="{ingame: started }">
-   <!-- 
-        通过引入 v-for指令 避免在HTML中书写大量的重复代码
-    -->
-    <div id="gameContainer" class="cards-container" >
-        <div class="card" v-for="i in totalCards" v-on:click="flipperHandler">
-            <div class="back"></div>
-            <div class="front" id="id" name="name"></div>
+        
+        <div class="cards-container" > 
+            <card v-for="card in cards"  
+                v-bind:key="card.id" 
+                v-bind:card-id="card.id"
+                v-bind:card-name="card.name"
+                v-bind:is-flipped="card.flip"
+                v-bind:image="card.image"
+                v-on:update="flipHandlerWrapper"></card>
         </div>
-    </div>
 
-    <div id="init-msg" class="init-msg">
-        <div class="center-circle" v-on:click="startGame">
-            <div class="message">
-                <p>Let's play</p>
-                <h1>Find the Pair!</h1>
-                <p>Click here to start the game</p>
-            </div>
+        <div class="init-msg">
+            <center-circle 
+                v-on:boost="loadImages" 
+                v-bind:not-show="started">
+            </center-circle>
         </div>
-    </div>
 
-    <div class="win-info">
-        <h1>Good Job! You win the game in 
-            <span class="costTime">20</span> seconds!
-        <h1>
-    </div>
+        <win-info-component 
+            v-bind:not-show="winInfo.notShow"
+            v-bind:cost-time="winInfo.costTime">
+         </win-info-component>
 
-    <div class="footer">
-        A simple JS Find the Pair game by <a href="http://jasonleaster.github.io">Jason Leaster</a> &nbsp; ... &nbsp; Awesome illustrations from <a href="http://www.freepik.com/free-photos-vectors/icon" target="_blank">Freepik</a>
-    </div>
+        <footer-component v-bind:not-show="started"></footer-component>
 
     </div>
 
