@@ -40,6 +40,21 @@ html {
 }
 
 
+.cards-container {
+    width: auto;
+    height: auto;
+    margin: 25px 50px;
+    opacity: 0;
+    transition: all 0s ease 1s;
+}
+
+/*
+   游戏开始后再显示容器图层的内容
+ */
+.ingame .cards-container {
+    opacity: 1;
+}
+
 /*
     利用@media screen实现网页布局的自适应
     当检测到设备的最大宽度不足400px时，
@@ -47,6 +62,10 @@ html {
 */
 
 @media screen and (max-width: 400px) {
+    .cards-container {
+        margin: 2% 10%;
+    }
+
     .init-msg {
         width: 250px;
         height: 250px;

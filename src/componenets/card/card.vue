@@ -2,7 +2,7 @@
     <div class="card" 
         v-bind:card-id="{cardId}" 
         v-bind:card-name="{cardName}"
-        v-bind:class="{flipper: isFlipped}"
+        v-bind:class="{flipper: isFlipped, rmHidden : animation}"
         v-on:click="flipperHandler" >
 
         <div class="back"></div>
@@ -11,12 +11,21 @@
 </template>
 
 <script>
+
+const IMG_PATH = "./static/image/cards/";
+const IMG_SUFFIX = ".png";
+
+function getImgPath(imgName) {
+    return 'url(' + IMG_PATH + imgName + IMG_SUFFIX + ')';
+}
+
 export default {
-    props: ['cardId', 'cardName', 'image', 'isFlipped'],
+    props: ['cardId', 'cardName', 'isFlipped', 'animation'],
     data: function () {
         return {
             id   : this.cardId,
             name : this.cardName,
+            image: getImgPath(this.cardName)
         }
     },
     methods: {
@@ -28,7 +37,6 @@ export default {
 </script>
 
 <style scoped>
-
 .card {
     position: relative;
     display: inline-block;
@@ -38,19 +46,17 @@ export default {
     border-radius: 10px;
     transition: all 0.3s ease;
     cursor: pointer;
+
+    /*
+     * 首先将卡牌的位置上移20像素
+     * 待游戏开始后，切换CSS属性，
+     * 完成"渐渐引入"的效果
+     */
+    opacity: 0; 
+    transform: translateY(-20px);
 }
 
-/*
- * 首先将卡牌的位置上移20像素
- * 待游戏开始后，切换CSS属性，
- * 完成"渐渐引入"的效果
- */
-* .card {
-  opacity: 0; 
-  transform: translateY(-20px);
-}
-
-.ingame * .card {
+.rmHidden {
   opacity: 1;
   transform: translateY(0);
 }
@@ -69,7 +75,7 @@ export default {
 }
 
 .back {
-    background: #FFF url(../img/help.png) no-repeat center center;
+    background: #FFF url(./img/help.png) no-repeat center center;
     background-size: 64px 64px;
     transform: rotateY(0deg);
     z-index: 2;

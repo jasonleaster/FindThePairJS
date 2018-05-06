@@ -15,11 +15,12 @@
         
         <div class="cards-container" > 
             <card v-for="card in cards"  
-                v-bind:key="card.id" 
-                v-bind:card-id="card.id"
+                v-bind:key      ="card.id" 
+                v-bind:card-id  ="card.id"
                 v-bind:card-name="card.name"
                 v-bind:is-flipped="card.flip"
-                v-bind:image="card.image"
+                v-bind:animation="transitionAnimation"
+                v-bind:not-show="started"
                 v-on:update="flipHandlerWrapper"></card>
         </div>
 
@@ -38,8 +39,6 @@
         <footer-component v-bind:not-show="started"></footer-component>
 
     </div>
-
-    <script type="text/javascript" src="../dist/app.js"></script>
 </body>
 
 </html>

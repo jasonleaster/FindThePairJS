@@ -28,31 +28,34 @@
 
 import Vue from 'vue';
 
-import Util from "./utils/utils.js"
+import Util from "./common/js/utils/utils.js"
 import FooterComponent from "./componenets/footer.vue"
 import WinInfoComponent from "./componenets/win-info.vue"
 import CenterCicle from "./componenets/center-circle.vue"
-import Card from "./componenets/card.vue"
+import Card from "./componenets/card/card.vue"
 
 
 const gameContext = new Vue({
     el: '#gameContext',
     data: {
-        flipCounter     : {}, // {cardName: count}
-        preCardId       : -1,
-        preCardName     : null,
+        startTime: Util.nowInMilSec(),
+        started: false,
+        flipCounter: {}, // {cardName: count}
         flippedOverCards: 0,
-        startTime       : Util.nowInMilSec(),
-        started         : false,
-        totalCards      : 14,
-        cards           : [], // {id : "", name: "",  image: ""}
-        winInfo : {
-            notShow  : true,
-            costTime : 0
+        totalCards: 14,
+        cards: [], // {id : "", name: "",  image: ""}
+        transitionAnimation: false, // 转场动画
+        preCard: {
+            id: -1,
+            name: null,
+        },
+        winInfo: {
+            notShow: true,
+            costTime: 0
         },
     },
     components: {
-    //  将只在父组件模板中可用
+        //  将只在父组件模板中可用
         'footer-component': FooterComponent,
         'win-info-component': WinInfoComponent,
         'center-circle': CenterCicle,
@@ -60,24 +63,16 @@ const gameContext = new Vue({
     },
     methods: {
         loadImages: function() {
-            const IMG_PATH = "./img/";
             const IMG_NAMES = ["chicken", "cow", "dog", "fox", "monkey", "owl", "penguin", "pig", "tiger"];
-            const IMG_SUFFIX = ".png";
-
-            function getImgPath(index) {
-                return 'url(' + IMG_PATH + IMG_NAMES[index] + IMG_SUFFIX + ')';
-            }
-
-            function getImgName(index) {
-                return IMG_NAMES[index];
+            function getImgName(imgIdx) {
+                return IMG_NAMES[imgIdx];
             }
 
             for (let i = 0; i < this.totalCards; i++) {
                 let imgIdx = Math.floor(i / 2);
                 let card = {
-                    "id": i, 
-                    "name": getImgName(imgIdx), 
-                    "image": getImgPath(imgIdx),
+                    "id": i,
+                    "name": getImgName(imgIdx),
                     "flip": false
                 };
                 this.cards.push(card);
@@ -87,15 +82,38 @@ const gameContext = new Vue({
             Util.shuffle(this.cards);
 
             this.started = true;
+           
+            /**
+             * 必须以异步的方式去更新动画状态，
+             * 否则vue会视为同一渲染过程，失去动画效果
+             */
+            const appCtx = this;
+            setTimeout(function() {
+                appCtx.transitionAnimation = true;
+            }, 100);
         },
-
-        flipHandlerWrapper : function (cardId, cardName) {
+        /*
+            reset the cards which are flippered and 
+            not the same of front faces.
+        */
+        removeFlipper: function(cardName) {
+            this.cards.forEach(function(card) {
+                if (card.name == cardName) {
+                    card.flip = false;
+                }
+            });
+        },
+        setPreCard: function(id, name) {
+            this.preCard.id = id;
+            this.preCard.name = name;
+        },
+        flipHandlerWrapper: function(cardId, cardName) {
             const HANDLER_DELAY = 1200;
             const appCtx = this;
 
             if (this.flipCounter[cardName] < 2) {
 
-                this.cards.forEach(function (card) {
+                this.cards.forEach(function(card) {
                     if (card.id == cardId) {
                         card.flip = true;
                     }
@@ -108,17 +126,14 @@ const gameContext = new Vue({
         },
 
         flipTheCard: function(cardId, cardName) {
-            const appCtx = this;
 
-            debugger;
             this.flipCounter[cardName] += 1;
 
-            if (this.preCardName === null) {
-                this.preCardId = cardId;
-                this.preCardName = cardName;
-            } else if (this.preCardName === cardName) {
-                this.preCardId = -1;
-                this.preCardName = null;
+            if (this.preCard.name === null) {
+                this.setPreCard(cardId, cardName);
+
+            } else if (this.preCard.name === cardName) {
+                this.setPreCard(-1, null);
 
                 this.flippedOverCards += 2;
 
@@ -132,26 +147,13 @@ const gameContext = new Vue({
 
             } else {
 
-                /*
-                    reset the cards which are flippered and 
-                    not the same of front faces.
-                 */
-                function removeFlipper(cardName) {
-                    appCtx.cards.forEach(function (card) {
-                        if (card.name == cardName) {
-                            card.flip = false;
-                        }
-                    });
-                }
-
-                removeFlipper(cardName);
-                removeFlipper(this.preCardName);
+                this.removeFlipper(cardName);
+                this.removeFlipper(this.preCard.name);
 
                 this.flipCounter[cardName] = 0;
-                this.flipCounter[this.preCardName] = 0;
+                this.flipCounter[this.preCard.name] = 0;
 
-                this.preCardId = -1;
-                this.preCardName = null;
+                this.setPreCard(-1, null);
             }
         },
     }

@@ -8,9 +8,9 @@ EOF
 ### 用法
 
 运行
-> npm install && webpack --verbose
+> npm install && npm run build
 
-在浏览器中打开 `src/index.html`。
+项目所需资源均打包生成在`dist`目录中，在浏览器中打开 `dist/index.html`。
 
 ### 内容
 
