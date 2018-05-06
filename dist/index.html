@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- 
+        首先我们在使用Media的时候需要先设置下面这段代码，来兼容移动设备的展示效果
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Find The Pair</title>
+</head>
+
+<body>
+    <div id="gameContext" v-bind:class="{ingame: started }">
+        
+        <div class="cards-container" > 
+            <card v-for="card in cards"  
+                v-bind:key      ="card.id" 
+                v-bind:card-id  ="card.id"
+                v-bind:card-name="card.name"
+                v-bind:is-flipped="card.flip"
+                v-bind:animation="transitionAnimation"
+                v-bind:not-show="started"
+                v-on:update="flipHandlerWrapper"></card>
+        </div>
+
+        <div class="init-msg">
+            <center-circle 
+                v-on:boost="loadImages" 
+                v-bind:not-show="started">
+            </center-circle>
+        </div>
+
+        <win-info-component 
+            v-bind:not-show="winInfo.notShow"
+            v-bind:cost-time="winInfo.costTime">
+         </win-info-component>
+
+        <footer-component v-bind:not-show="started"></footer-component>
+
+    </div>
+<script type="text/javascript" src="app.js"></script></body>
+
+</html>
