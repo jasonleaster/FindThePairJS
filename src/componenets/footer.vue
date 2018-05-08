@@ -9,7 +9,12 @@
 
 <script>
     export default {
-        props : ["notShow"],
+        props : { 
+            notShow: {
+                type: Boolean,
+                default: false
+            }
+        },
     }
 </script>
 

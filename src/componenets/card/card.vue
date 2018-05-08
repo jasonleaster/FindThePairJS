@@ -20,16 +20,33 @@ function getImgPath(imgName) {
 }
 
 export default {
-    props: ['cardId', 'cardName', 'isFlipped', 'animation'],
+    props: {
+        cardId: {
+            type: Number,
+            default: -1
+        },
+        cardName: {
+            type: String,
+            default: "card"
+        },
+        isFlipped: {
+            type: Boolean,
+            default: false
+        },
+        animation: {
+            type: Boolean,
+            default: false
+        },
+    },
     data: function () {
         return {
-            id   : this.cardId,
-            name : this.cardName,
+            id: this.cardId,
+            name: this.cardName,
             image: getImgPath(this.cardName)
         }
     },
     methods: {
-        flipperHandler: function($event) {
+        flipperHandler: function ($event) {
             this.$emit('update', this.id, this.name);
         },
     },
@@ -61,7 +78,8 @@ export default {
   transform: translateY(0);
 }
 
-.back,.front {
+.back,
+.front {
     position: absolute;
     top: 0;
     left: 0;
@@ -75,12 +93,11 @@ export default {
 }
 
 .back {
-    background: #FFF url(./img/help.png) no-repeat center center;
+    background: #fff url(./img/help.png) no-repeat center center;
     background-size: 64px 64px;
     transform: rotateY(0deg);
     z-index: 2;
 }
-
 
 /*
     先将图片翻转180度，待用户触发翻转动作时,
@@ -129,7 +146,7 @@ export default {
     transition-delay: 1.8s;
 }
 .card:nth-child(5) {
-    transition-delay: 2.0s;
+    transition-delay: 2s;
 }
 .card:nth-child(6) {
     transition-delay: 2.2s;
@@ -144,7 +161,7 @@ export default {
     transition-delay: 2.8s;
 }
 .card:nth-child(10) {
-    transition-delay: 3.0s;
+    transition-delay: 3s;
 }
 .card:nth-child(11) {
     transition-delay: 3.2s;
@@ -160,7 +177,7 @@ export default {
 }
 
 .card .front {
-    background-color:  transparent;
+    background-color: transparent;
     background-repeat: no-repeat;
     background-position: center center;
 }
@@ -179,5 +196,4 @@ export default {
         background-size: 60px 88px;
     }
 }
-
 </style>

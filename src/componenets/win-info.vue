@@ -1,19 +1,27 @@
 <template>
     <div class="win-info" v-bind:class="{hidden: notShow}">
-        <h1>Good Job! You win the game in 
+        <h1>Good Job! You win the game in
             <span class="costTime">{{costTime}}</span> seconds!
         </h1>
     </div>
 </template>
 
 <script>
-    export default {
-        props : ["notShow", "costTime"],
-    }
+export default {
+    props: {
+        notShow: {
+            type: Boolean,
+            default: false
+        },
+        costTime: {
+            type: Number,
+            default: 10            
+        }
+    },
+}
 </script>
 
 <style scoped>
-
 .hidden {
     visibility: hidden;
 }
@@ -35,5 +43,4 @@
     width: 100%;
     text-align: center;
 }
-
 </style>
